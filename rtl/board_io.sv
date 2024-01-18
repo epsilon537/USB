@@ -61,7 +61,7 @@ module board_io
 
    always_comb io_ren = valid & ~wb.we;
    always_comb io_wen = valid &  wb.we;
-   always_comb io_adr = wb.adr[10:0] << 1;
+   always_comb io_adr = {wb.adr[10:0],1'b0};
 
    /* Wishbone control
     * Classic pipelined bus cycles

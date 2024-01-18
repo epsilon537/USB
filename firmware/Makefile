@@ -1,7 +1,7 @@
 # Create firmware
 
-FORTH = /usr/local/opt/SwiftForth/bin/osx/sf
-#FORTH = gforth -e
+#FORTH = /usr/local/opt/SwiftForth/bin/osx/sf
+FORTH = gforth
 
 VPATH = ../J1_WB/j1_forth
 
@@ -12,7 +12,7 @@ SRC = crossj1.fs \
 
 .PHONY: sim syn
 
-j1.mif j1.lst: $(SRC) *.fs
+j1.mif j1.hex j1.lst: $(SRC) *.fs
 	$(FORTH) main.fs
 
 sim: j1.mif

@@ -35,12 +35,12 @@ hex
 : create-output-file w/o create-file throw to outfile ;
 
 \ \ for RTL simulation
-\ s" j1.hex" create-output-file
-\ :noname
-\     2000 0 do
-\        i t@ s>d <# # # # # #> type cr
-\     2 +loop
-\ ; execute
+s" j1.hex" create-output-file
+:noname
+    2000 0 do
+       i t@ s>d <# # # # # #> type cr
+    2 +loop
+; execute
 
 \ for Quartus II synthesis
 s" j1.mif" create-output-file

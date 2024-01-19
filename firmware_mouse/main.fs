@@ -35,7 +35,7 @@ hex
 : create-output-file w/o create-file throw to outfile ;
 
 \ \ for RTL simulation
-s" j1.hex" create-output-file
+s" j1_mouse.hex" create-output-file
 :noname
     2000 0 do
        i t@ s>d <# # # # # #> type cr
@@ -43,7 +43,7 @@ s" j1.hex" create-output-file
 ; execute
 
 \ for Quartus II synthesis
-s" j1.mif" create-output-file
+s" j1_mouse.mif" create-output-file
 :noname
    s" -- Quartus II generated Memory Initialization File (.mif)" type cr
    s" WIDTH=16;" type cr
@@ -61,7 +61,7 @@ s" j1.mif" create-output-file
    s" END;" type cr
 ; execute
 
-s" j1.lst" create-output-file
+s" j1_mouse.lst" create-output-file
 0 1000 disassemble-block
 
 bye

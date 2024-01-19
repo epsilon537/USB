@@ -12,11 +12,11 @@ SRC = crossj1.fs \
 
 .PHONY: sim syn
 
-j1.mif j1.hex j1.lst: $(SRC) *.fs
+j1_mouse.mif j1_mouse.hex j1_mouse.lst: $(SRC) *.fs
 	$(FORTH) main.fs
 
-sim: j1.mif
+sim: j1_mouse.mif
 	cp $^ ../sim
 
-syn: j1.mif
+syn: j1_mouse.mif
 	cp $^ ../syn

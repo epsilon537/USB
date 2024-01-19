@@ -10,7 +10,8 @@
 
 `default_nettype none
 
-module top_usb_device
+module top_usb_device 
+  #(parameter J1_ROM_INIT_FILE="j1_keyboard.hex")
   (
    input wire        clk,
    input wire        usb_clk,
@@ -59,7 +60,7 @@ module top_usb_device
 
    wb_intercon wb_intercon (.*);
 
-   wb_rom wb_rom(.wb(wbs1));
+   wb_rom #(.INIT_FILE(J1_ROM_INIT_FILE)) wb_rom(.wb(wbs1));
 
    wb_ram wb_ram(.wb(wbs2));
 

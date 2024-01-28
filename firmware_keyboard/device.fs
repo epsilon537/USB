@@ -17,6 +17,8 @@ variable wValue
 variable wIndex
 variable wLength
 
+variable expect-report
+
 variable data-crc
 variable data-pid
 
@@ -34,6 +36,7 @@ ROM
 : token-out?   ( -- f )   token-pid @ %out   = ;
 : token-in?    ( -- f )   token-pid @ %in    = ;
 
+: host-dev-class-if? ( -- f )   bmRequestType @ %host-dev-class-if = ;
 : host-to-device?    ( -- f )   bmRequestType @ %host-to-device    = ;
 : host-to-interface? ( -- f )   bmRequestType @ %host-to-interface = ;
 : host-to-endpoint?  ( -- f )   bmRequestType @ %host-to-endpoint  = ;
@@ -41,16 +44,17 @@ ROM
 : interface-to-host? ( -- f )   bmRequestType @ %interface-to-host = ;
 : endpoint-to-host?  ( -- f )   bmRequestType @ %endpoint-to-host  = ;
 
+: set-report?        ( -- f )   host-dev-class-if? bRequest @  %set-report = and ;
 : get-status?        ( -- f )   bRequest @  %get-status        = ;
 : clear-feature?     ( -- f )   bRequest @  %clear-feature     = ;
 : set-feature?       ( -- f )   bRequest @  %set-feature       = ;
-: set-address?       ( -- f )   bRequest @  %set-address       = ;
-: get-descriptor?    ( -- f )   bRequest @  %get-descriptor    = ;
-: set-descriptor?    ( -- f )   bRequest @  %set-descriptor    = ;
-: get-configuration? ( -- f )   bRequest @  %get-configuration = ;
-: set-configuration? ( -- f )   bRequest @  %set-configuration = ;
-: get-interface?     ( -- f )   bRequest @  %get-interface     = ;
-: set-interface?     ( -- f )   bRequest @  %set-interface     = ;
+: set-address?       ( -- f )   device-to-host? bRequest @  %set-address = and ;
+: get-descriptor?    ( -- f )   device-to-host? bRequest @  %get-descriptor = and ;
+: set-descriptor?    ( -- f )   host-to-device? bRequest @  %set-descriptor = and ;
+: get-configuration? ( -- f )   device-to-host? bRequest @  %get-configuration = and ;
+: set-configuration? ( -- f )   host-to-device? bRequest @  %set-configuration = and ;
+: get-interface?     ( -- f )   interface-to-host? bRequest @  %get-interface     = and ;
+: set-interface?     ( -- f )   host-to-interface? bRequest @  %set-interface     = and ;
 
 \ ======================================================================
 \ CRC-16 calculation
@@ -205,6 +209,17 @@ ROM
     %ack set-pid ;
 
 \ ----------------------------------------------------------------------
+\ SET REPORT (9)
+\ ----------------------------------------------------------------------
+: do-set-report ( -- )
+    wLength @ d# 1 = if
+    d# -1 expect-report ! 
+    %ack set-pid 
+    else 
+    %nak set-pid 
+    then ; 
+
+\ ----------------------------------------------------------------------
 \ GET INTERFACE (10)
 \ ----------------------------------------------------------------------
 \ not implemented
@@ -223,6 +238,10 @@ ROM
 \ default OUT response is zero-length package
 : do-epo0 ( -- )
     get-pid ( DATA1) drop
+    expect-report @ if
+    d# 0 expect-report !
+    rxbuf-c@ set-leds
+    then
     get-crc
     %ack set-pid ;
 
@@ -241,7 +260,8 @@ ROM
 
     %data1 epi0-pid !  \ IN response starts always with DATA1
     d# 0 epi0-length ! \ default IN response is zero-length package
-
+    d# 0 expect-report !
+    
     get-status?         if  do-get-status         exit  then
     clear-feature?      if  do-clear-feature      exit  then
     set-feature?        if  do-set-feature        exit  then
@@ -251,6 +271,7 @@ ROM
     get-configuration?  if  do-get-configuration  exit  then
     set-configuration?  if  do-set-configuration  exit  then
     set-interface?      if  do-set-interface      exit  then
+    set-report?         if  do-set-report         exit  then
     %ack set-pid ; \ always ACK
 
 \ ======================================================================

@@ -22,6 +22,8 @@ $6002 constant io-txbuf-control
 $6004 constant io-rxbuf-data
 $6006 constant io-rxbuf-control
 
+: set-leds ( 8b -- ) io-ledg ! ;
+         
 : txbuf-wait-empty ( -- )   begin  io-txbuf-control @  h# 1 and  until ;
 : txbuf-c! ( 8b -- )   io-txbuf-data ! ;
 : txbuf-! ( 16b -- )   hilo txbuf-c! txbuf-c! ;

@@ -24,6 +24,7 @@ $78 constant %ping
 $00 constant %host-to-device
 $01 constant %host-to-interface
 $02 constant %host-to-endpoint
+$21 constant %host-dev-class-if
 $80 constant %device-to-host
 $81 constant %interface-to-host
 $82 constant %endpoint-to-host
@@ -40,6 +41,9 @@ $82 constant %endpoint-to-host
 10 constant %get-interface
 11 constant %set-interface
 12 constant %synch-frame
+
+\ class requests
+ 9 constant %set-report
 
 \ descriptor types
 1  constant %device

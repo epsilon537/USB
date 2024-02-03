@@ -2,3 +2,6 @@
 	path = J1_WB
 	url = https://github.com/epsilon537/J1_WB.git
 
+[submodule "async_fifo"]
+	path = async_fifo
+	url = https://github.com/epsilon537/async_fifo
